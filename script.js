@@ -327,7 +327,7 @@ function calcular() {
     
     decisiones.forEach(decision => {
         tablaHTML += `<tr>
-                        <td>${decision.metodo} (Fila: ${decision.fila})</td>
+                        <td>${decision.metodo} (Accion: ${decision.Accion})</td>
                         <td>${decision.valorDecision}</td>
                       </tr>`;
     });
