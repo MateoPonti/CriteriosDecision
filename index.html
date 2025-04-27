@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Matriz Numérica Editable</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h2 style="text-align:center;">Matriz de Beneficios</h2>
+
+  <div class="formulario">
+ 
+    <label for="valorF">Tamaño de la fila:</label>
+    <input type="number" id="valorF" min="2" max="20" value="3">
+    <label for="valorC">Tamaño de la columna:</label>
+    <input type="number" id="valorC" min="2" max="20" value="3">
+  
+    <label for="valorW" id="labelW" style="display: none;">W:</label>
+    <input type="number" id="valorW" min="0.00" max="1.00" value="0.01" step="0.01" style="display: none;">
+    
+    <button onclick="generarTabla()">Generar</button>
+    <button id="btnCalcular" onclick="calcular()" style="display: none;">Calcular Coeficientes</button>
+
+  </div>
+
+  <div id="contenedor-tabla"></div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
