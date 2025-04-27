@@ -236,7 +236,6 @@ function calcularSAVAGE(matriz) {
       Math.max(...fila)
     );
   
-    console.log(maximosPorFila);
 
     const savage = Math.min(...maximosPorFila);
     const posicion = maximosPorFila.indexOf(savage) + 1; 
