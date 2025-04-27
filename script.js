@@ -204,7 +204,7 @@ function calcularHURWICZ(matriz,w){
         min=valor;
       }
     }
-    h= w * max - ((1-w)* min);
+    h= w * max +  ((1-w)* min);
     if (h>hurwicz) {
        posicion=i+1;
        hurwicz=h;
