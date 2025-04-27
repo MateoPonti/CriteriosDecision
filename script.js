@@ -144,7 +144,7 @@ function calcularMAXIMAX(matriz){
     let fila = matriz[i];
     let mayor = fila[0];
 
-    for (let j = 1; j < fila.length; j++) {
+    for (let j = 0; j < fila.length; j++) {
       let valor = fila[j];
       if (valor>mayor){
         mayor=valor;
@@ -160,18 +160,123 @@ function calcularMAXIMAX(matriz){
 }
 
 
+function calcularMAXIMIN(matriz){
+  MAXIMIN=-Infinity;
+  posicion = 1;
+
+  for (let i = 0; i < matriz.length; i++) {
+    let fila = matriz[i];
+    let min = +Infinity;
+
+    for (let j = 0; j < fila.length; j++) {
+      let valor = fila[j];
+      if (valor<min){
+        min=valor;
+      
+      }
+    }
+    if (min > MAXIMIN) {
+     MAXIMIN=min;
+     posicion=i+1;
+    }
+  }
+  return {posicion,MAXIMIN};
+}
+
+
+function calcularHURWICZ(matriz,w){
+  posicion = 1;
+  hurwicz = -Infinity;
+
+  for (let i = 0; i < matriz.length; i++) {
+    let fila = matriz[i];
+
+     min =Infinity;
+     max =-Infinity;
+
+
+     for (let j = 0; j < fila.length; j++) {
+       let valor = fila[j];
+       if (valor>max){
+         max=valor;
+      }
+      if (valor<min){
+        min=valor;
+      }
+    }
+    h= w * max - ((1-w)* min);
+    if (h>hurwicz) {
+       posicion=i+1;
+       hurwicz=h;
+    }
+  }
+  return {posicion,hurwicz};
+}
 
 
 
+function calcularSAVAGE(matriz) {
+    const maxColumna = [];
+    for (let j = 0; j < matriz[0].length; j++) {
+      let max = -Infinity;
+      for (let i = 0; i < matriz.length; i++) {
+        if (matriz[i][j] > max) {
+          max = matriz[i][j];
+        }
+      }
+      maxColumna.push(max);
+    }
+  
+    const matrizArrepentimiento = matriz.map((fila, i) =>
+      fila.map((valor, j) => maxColumna[j] - valor)
+    );
+
+  
+    const maximosPorFila = matrizArrepentimiento.map(fila =>
+      Math.max(...fila)
+    );
+  
+    console.log(maximosPorFila);
+
+    const savage = Math.min(...maximosPorFila);
+    const posicion = maximosPorFila.indexOf(savage) + 1; 
+  
+    return { posicion, savage };
+  }
 
 
+  function calcularBEIP(matriz, probabilidades) {
+    let BEIP = 0;
+    for (let j = 0; j < matriz[0].length; j++) {
+        let maximoColumna = -Infinity;
+        for (let i = 0; i < matriz.length; i++) {
+            let valor = matriz[i][j];
+            if (valor > maximoColumna) {
+                maximoColumna = valor;
+            }
+        }
+        BEIP += maximoColumna * probabilidades[j];
+    }
+    return BEIP;
+}
 
+function calcularBE(matriz, probabilidades) {
+  let BEmaximo = -Infinity;
+  for (let i = 0; i < matriz.length; i++) {
+      let valorEsperado = 0;
+      for (let j = 0; j < matriz[i].length; j++) {
+          valorEsperado += matriz[i][j] * probabilidades[j];
+      }
+      BEmaximo = Math.max(BEmaximo, valorEsperado);
+  }
+  return BEmaximo;
+}
 
-
-
-
-
-
+function calcularVEIP(matriz, probabilidades) {
+    let BEIP = calcularBEIP(matriz, probabilidades);
+    let BE = calcularBE(matriz, probabilidades);
+    return BEIP - BE;
+}
 
 
 
@@ -180,10 +285,68 @@ function calcularMAXIMAX(matriz){
 function calcular() {
   const objtProb = comprobarProbabilidades();
   const objtMatriz = comprobarMatriz();
+  const probW = parseFloat(document.getElementById("valorW").value);
 
+  if (isNaN(probW) || probW < 0 || probW > 1) {
+    alert("La probabilidad tiene que estar entre 0 y 1");
+    return;
+  }
+  
   if (objtProb.esValido && objtMatriz.esValido){
-    resultadoMAXIMAX=calcularMAXIMAX(objtMatriz.matrizBij);
-    console.log("La decisión a tomar es fila: " + (resultadoMAXIMAX.posicion + 2) + " con el valor MAXIMO de : " + resultadoMAXIMAX.MAXIMAX);
+      const resultadoMAXIMAX = calcularMAXIMAX(objtMatriz.matrizBij);
+      const resultadoMAXIMIN = calcularMAXIMIN(objtMatriz.matrizBij);
+      const resultadoHurwicz = calcularHURWICZ(objtMatriz.matrizBij, probW);
+      const resultadoSavage = calcularSAVAGE(objtMatriz.matrizBij);
+      const resultadoBEIP = calcularBEIP(objtMatriz.matrizBij,objtProb.probabilidades);
+      const resultadoVEIP = calcularVEIP(objtMatriz.matrizBij,objtProb.probabilidades);
+      const decisiones = [
+        {
+            metodo: "MAXIMAX",
+            fila: resultadoMAXIMAX.posicion + 2,
+            valorDecision: resultadoMAXIMAX.MAXIMAX
+        },
+        {
+            metodo: "MAXIMIN",
+            fila: resultadoMAXIMIN.posicion + 2,
+            valorDecision: resultadoMAXIMIN.MAXIMIN
+        },
+        {
+            metodo: "Hurwicz",
+            fila: resultadoHurwicz.posicion + 2,
+            valorDecision: resultadoHurwicz.hurwicz
+        },
+        {
+            metodo: "Savage",
+            fila: resultadoSavage.posicion + 2,
+            valorDecision: resultadoSavage.savage
+        }
+
+    ];
+    
+    let tablaHTML = '<table border="1" style="border-collapse: collapse;">';
+    tablaHTML += '<tr><th>Decisión Tomada</th><th>Valor de Decisión</th></tr>';
+    
+    decisiones.forEach(decision => {
+        tablaHTML += `<tr>
+                        <td>${decision.metodo} (Fila: ${decision.fila})</td>
+                        <td>${decision.valorDecision}</td>
+                      </tr>`;
+    });
+    tablaHTML += `<tr>
+    <td> BEIP:  </td>
+    <td> ${resultadoBEIP} </td>
+    </tr>`;
+
+    tablaHTML += `<tr>
+    <td> VEIP:  </td>
+    <td> ${resultadoVEIP} </td>
+    </tr>`;
+
+    tablaHTML += '</table>';
+    
+    document.getElementById('tablaResultados').innerHTML = tablaHTML;
+
+
   }
   else {
     alert("No se pudo calcular los coeficientes");
