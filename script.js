@@ -301,22 +301,22 @@ function calcular() {
       const decisiones = [
         {
             metodo: "MAXIMAX",
-            fila: resultadoMAXIMAX.posicion + 2,
+            Accion: resultadoMAXIMAX.posicion ,
             valorDecision: resultadoMAXIMAX.MAXIMAX
         },
         {
             metodo: "MAXIMIN",
-            fila: resultadoMAXIMIN.posicion + 2,
+            Accion: resultadoMAXIMIN.posicion ,
             valorDecision: resultadoMAXIMIN.MAXIMIN
         },
         {
             metodo: "Hurwicz",
-            fila: resultadoHurwicz.posicion + 2,
+            Accion: resultadoHurwicz.posicion,
             valorDecision: resultadoHurwicz.hurwicz
         },
         {
             metodo: "Savage",
-            fila: resultadoSavage.posicion + 2,
+            Accion:resultadoSavage.posicion ,
             valorDecision: resultadoSavage.savage
         }
 
