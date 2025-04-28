@@ -249,6 +249,7 @@ function calcularSAVAGE(matriz) {
     for (let j = 0; j < matriz[0].length; j++) {
         let maximoColumna = -Infinity;
         for (let i = 0; i < matriz.length; i++) {
+            
             let valor = matriz[i][j];
             if (valor > maximoColumna) {
                 maximoColumna = valor;
@@ -261,20 +262,26 @@ function calcularSAVAGE(matriz) {
 
 function calcularBE(matriz, probabilidades) {
   let BEmaximo = -Infinity;
+  let posicion = 1;
+  
   for (let i = 0; i < matriz.length; i++) {
-      let valorEsperado = 0;
-      for (let j = 0; j < matriz[i].length; j++) {
-          valorEsperado += matriz[i][j] * probabilidades[j];
-      }
-      BEmaximo = Math.max(BEmaximo, valorEsperado);
+    let valorEsperado = 0;
+    for (let j = 0; j < matriz[i].length; j++) {
+      valorEsperado += matriz[i][j] * probabilidades[j];
+    }
+    if (valorEsperado > BEmaximo) {
+      BEmaximo = valorEsperado;
+      posicion = i + 1;
+    }
   }
-  return BEmaximo;
+  
+  return { BEmaximo, posicion };
 }
 
 function calcularVEIP(matriz, probabilidades) {
     let BEIP = calcularBEIP(matriz, probabilidades);
     let BE = calcularBE(matriz, probabilidades);
-    return BEIP - BE;
+    return BEIP - BE.BEmaximo;
 }
 
 
@@ -298,6 +305,7 @@ function calcular() {
       const resultadoSavage = calcularSAVAGE(objtMatriz.matrizBij);
       const resultadoBEIP = calcularBEIP(objtMatriz.matrizBij,objtProb.probabilidades);
       const resultadoVEIP = calcularVEIP(objtMatriz.matrizBij,objtProb.probabilidades);
+      const mayorValorEsperado= calcularBE(objtMatriz.matrizBij,objtProb.probabilidades);
       const decisiones = [
         {
             metodo: "MAXIMAX",
@@ -318,7 +326,13 @@ function calcular() {
             metodo: "Savage",
             Accion:resultadoSavage.posicion ,
             valorDecision: resultadoSavage.savage
-        }
+        },
+        {
+          metodo: "MayorEsperanza",
+          Accion:mayorValorEsperado.posicion ,
+          valorDecision: mayorValorEsperado.BEmaximo
+      },
+  
 
     ];
     
