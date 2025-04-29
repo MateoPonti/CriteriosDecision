@@ -366,17 +366,17 @@ function calcular() {
     decisiones.forEach(decision => {
         tablaHTML += `<tr>
                         <td>${decision.metodo} (Accion: ${decision.Accion})</td>
-                        <td>${decision.valorDecision}</td>
+                        <td>${decision.valorDecision.toFixed(4)}</td>
                       </tr>`;
     });
     tablaHTML += `<tr>
     <td> BEIP:  </td>
-    <td> ${resultadoBEIP} </td>
+    <td> ${resultadoBEIP.toFixed(4)} </td>
     </tr>`;
 
     tablaHTML += `<tr>
     <td> VEIP:  </td>
-    <td> ${resultadoVEIP} </td>
+    <td> ${resultadoVEIP.toFixed(4)} </td>
     </tr>`;
 
     tablaHTML += '</table>';
