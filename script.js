@@ -7,8 +7,13 @@ function generarTabla() {
     return;
   }
 
+  
   const contenedor = document.getElementById("contenedor-tabla");
+  const contenedorResultado = document.getElementById("tablaResultados");
+
+
   contenedor.innerHTML = "";
+  contenedorResultado.innerHTML="";
 
   const tabla = document.createElement("table");
   const tbody = document.createElement("tbody");
