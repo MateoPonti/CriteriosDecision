@@ -74,10 +74,31 @@ function generarTabla() {
   contenedor.appendChild(tabla);
 
   document.getElementById("btnCalcular").style.display = "inline-block";
+  document.getElementById("btnGenerarRandom").style.display = "inline-block";
   document.getElementById("labelW").style.display = "inline-block";
   document.getElementById("valorW").style.display = "inline-block";
 
 }
+
+
+function randomizar(){
+  const contenedor = document.getElementById("contenedor-tabla");
+  const tabla = contenedor.querySelector("table");
+  for (let i = 2; i < tabla.rows.length; i++) {
+    const fila = tabla.rows[i];
+    let filai = [];
+  
+    for (let j = 1; j < fila.cells.length; j++) {
+      const celda = fila.cells[j];
+      const input = celda.querySelector("input");
+      const random = (Math.random() * 200 - 100).toFixed(2); 
+      input.value = random;
+  
+    }
+  }
+}
+
+
 function comprobarProbabilidades() {
   const contenedor = document.getElementById("contenedor-tabla");
   const tabla = contenedor.querySelector("table");
@@ -91,8 +112,7 @@ function comprobarProbabilidades() {
     const input = celda.querySelector("input");
     const valor = input ? input.value : celda.textContent;
     const valorF = parseFloat(valor);
-
-    if (isNaN(valorF) || valorF < 0.0 || valorF > 1.0) {
+    if (isNaN(valorF) || valorF <= 0 || valorF >= 1) {
       alert("La probabilidad tiene que ser un número entre 0 y 1");
       return { esValido: false, probabilidades: [] };
     } else {
@@ -100,8 +120,7 @@ function comprobarProbabilidades() {
       probabilidades.push(valorF);
     }
   }
-
-  if (suma !== 1) {
+  if (Math.abs(suma - 1) > 1e-5)  {
     esValido = false;
     alert("La suma de las probabilidades debe dar 1.");
   }
